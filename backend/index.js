@@ -1,7 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';                 // for cleaning the request body
-import studentRouter from './routers/studentRouter.js';          // importing the studentRouter from the studentRouter.js file
 import userRouter from './routers/userRouter.js';          // importing the userRouter from the userRouter.js file
 
 const app = express();           // complete backend code for express server
@@ -16,7 +15,6 @@ app.use( (req,res,next)=>{
 })
 
 
-app.use('/students',studentRouter);          // if requests are made to the /students encpoint , use the studentRouter to handle those requests 
 app.use('/users',userRouter);          // if requests are made to the /users encpoint , use the userRouter to handle those requests
 
 // MongoDB connection 
@@ -31,8 +29,8 @@ mongoose.connect(connectionString).then(() =>{
 
 
  
-app.listen(5050,()=>{
-    console.log("Server is running on port 5050");         // connecting the server to the port 5050 and listening for requests
+app.listen(5060,()=>{
+    console.log("Server is running on port 5060");         // connecting the server to the port 5050 and listening for requests
 })
 
 
