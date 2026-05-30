@@ -11,6 +11,22 @@ export function getUsers(req,res){
 
 export function createUsers(req,res){
 
+    if(req.user == null){
+        res.status(401).json({
+            "message" : "Please login to create a new user"      // if the user is not logged in , send a response to the sender of the request
+            
+        })
+        return ;
+    }
+
+    if(req.user.role != "admin"){
+        res.status(403).json({
+            "message" : "Only admin users can create new users"      // if the logged in user is not an admin , send a response to the sender of the request
+        })
+        return ;
+    }
+    
+
     const passwordHash = bcrypt.hashSync(req.body.password,10) ;           // hashing the password using bcrypt library with a salt rounds of 10
 
     const userData = {
@@ -53,7 +69,7 @@ export function loginUser(req,res){                     // function to handle us
 
                 const token = jwt.sign({
                     firstName : user.firstName ,
-                    lastName : user.lastName ,
+                    lastName : user.lastName ,  
                     email : user.email ,
                     role : user.role , 
                     isBlocked : user.isBlocked , 
