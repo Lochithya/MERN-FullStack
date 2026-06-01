@@ -1,7 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';                 // for cleaning the request body
-import studentRouter from './routers/studentRouter.js';          // importing the studentRouter from the studentRouter.js file
+import productRouter from './routers/productRouter.js';        // importing the productRouter from the productRouter.js file
 import userRouter from './routers/userRouter.js';          // importing the userRouter from the userRouter.js file
 import jwt from 'jsonwebtoken' ;
 
@@ -30,17 +30,18 @@ app.use( (req,res,next)=>{
         })
     }
     else{
-        next();         // if no token is provided in the request headers , move on to the next middleware function 
+        next();         // if no token is provided in the request headers , req.user becomes null and move on to the next middleware function 
     }
     
     
 })
 
 
-app.use('/students',studentRouter);          // if requests are made to the /students encpoint , use the studentRouter to handle those requests 
 app.use('/users',userRouter);          // if requests are made to the /users encpoint , use the userRouter to handle those requests
+app.use('/products',productRouter) ;        // if requests are made to the /products encpoint , use the productRouter to handle those requests
 
-// MongoDB connection 
+
+// MongoDB connection
 const connectionString = "mongodb://lochithya:lochithya123@ac-z9bik8s-shard-00-00.t6q2szi.mongodb.net:27017,ac-z9bik8s-shard-00-01.t6q2szi.mongodb.net:27017,ac-z9bik8s-shard-00-02.t6q2szi.mongodb.net:27017/?ssl=true&replicaSet=atlas-104oqb-shard-0&authSource=admin&appName=Cluster0"          // connection string of the mongodb database with the password and username  
 
 

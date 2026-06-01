@@ -2,28 +2,39 @@ import User from '../models/user.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken' ; 
 
+/*
 export function getUsers(req,res){
 
     User.find().then((users)=>{
         res.json(users);           // finding all the user documents in the mongodb database and sending them as a response to the sender of the request
     })
+    .catch((err)=>{
+        console.log("Error fetching users from MongoDB",err);           // logging an error message if the fetch from the mongodb database fails
+    })
 }
+*/
+
+export async function getUsers(req,res){
+    try{
+        const users = await User.find() ;           // finding all the user documents in the mongodb database and sending them as a response to the sender of the request
+        res.json(users);
+    }
+    catch(err){
+        res.status(500).json({
+            "message" : "Error fetching users from MongoDB",
+            "error" : err.message
+        }) ;           // logging an error message if the fetch from the mongodb database fails
+    }
+}
+
 
 export function createUsers(req,res){
 
-    if(req.user == null){
-        res.status(401).json({
-            "message" : "Please login to create a new user"      // if the user is not logged in , send a response to the sender of the request
-            
-        })
-        return ;
-    }
-
-    if(req.user.role != "admin"){
+    if(!isAdmin(req)){
         res.status(403).json({
-            "message" : "Only admin users can create new users"      // if the logged in user is not an admin , send a response to the sender of the request
-        })
-        return ;
+            message : "Only admin users can create new users"
+        }) ;
+        return ; 
     }
     
 
@@ -92,4 +103,18 @@ export function loginUser(req,res){                     // function to handle us
             }
         }
     })
+}
+
+
+export function isAdmin(req){                              // to check if the user sending the request is an admin user or not. This function can be used in other controller functions to restrict access to certain functionalities to only admin users.
+    
+    if(req.user == null ){
+        return false ;
+    }
+    if(req.user.role == "admin"){
+        return true ;
+    }
+    else{
+        return false ;
+    }
 }
