@@ -1,6 +1,9 @@
 import User from '../models/user.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken' ; 
+import dotenv from 'dotenv' ;
+
+dotenv.config() ;          // loading environment variables from the .env file
 
 /*
 export function getUsers(req,res){
@@ -88,7 +91,7 @@ export function loginUser(req,res){                     // function to handle us
                     image : user.image ,
                     phone : user.phone
                 } , 
-                    "cbc-6503"                    // secret key for signing the JWT token. In a production environment, this should be stored in an environment variable and not hardcoded in the codebase.
+                    process.env.secret_key                    // secret key for signing the JWT token. retrieved from the .env file 
                 )
 
                 res.json({

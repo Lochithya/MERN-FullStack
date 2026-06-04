@@ -4,9 +4,12 @@ import bodyParser from 'body-parser';                 // for cleaning the reques
 import productRouter from './routers/productRouter.js';        // importing the productRouter from the productRouter.js file
 import userRouter from './routers/userRouter.js';          // importing the userRouter from the userRouter.js file
 import jwt from 'jsonwebtoken' ;
+import dotenv from 'dotenv' ; 
+
 
 const app = express();           // complete backend code for express server
 
+dotenv.config() ;          // loading environment variables from the .env file
 
 app.use(bodyParser.json());           // using body-parser middleware to parse the request body as JSON
 
@@ -16,7 +19,7 @@ app.use( (req,res,next)=>{
     if(token){
         const newToken = token.replace("Bearer ","") ;           // removing the "Bearer " prefix from the token
         
-        jwt.verify(newToken,"cbc-6503",(err,decoded)=>{          // verifying the token using the jwt library and a secret key. In a production environment, the secret key should be stored in an environment variable and not hardcoded in the codebase.
+        jwt.verify(newToken,process.env.secret_key,(err,decoded)=>{          // verifying the token using the jwt library and a secret key. In a production environment, the secret key should be stored in an environment variable and not hardcoded in the codebase.
             
             if(decoded == null){
                 res.status(403).json({
@@ -37,12 +40,12 @@ app.use( (req,res,next)=>{
 })
 
 
-app.use('/users',userRouter);          // if requests are made to the /users encpoint , use the userRouter to handle those requests
-app.use('/products',productRouter) ;        // if requests are made to the /products encpoint , use the productRouter to handle those requests
+app.use('/api/users',userRouter);          // if requests are made to the /users encpoint , use the userRouter to handle those requests
+app.use('/api/products',productRouter) ;        // if requests are made to the /products encpoint , use the productRouter to handle those requests
 
 
 // MongoDB connection
-const connectionString = "mongodb://lochithya:lochithya123@ac-z9bik8s-shard-00-00.t6q2szi.mongodb.net:27017,ac-z9bik8s-shard-00-01.t6q2szi.mongodb.net:27017,ac-z9bik8s-shard-00-02.t6q2szi.mongodb.net:27017/?ssl=true&replicaSet=atlas-104oqb-shard-0&authSource=admin&appName=Cluster0"          // connection string of the mongodb database with the password and username  
+const connectionString =  process.env.MONGO_URL         // connection string of the mongodb database with the password and username  
 
 
 mongoose.connect(connectionString).then(() =>{

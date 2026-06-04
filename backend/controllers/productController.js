@@ -35,7 +35,7 @@ export async function getProductsById(req,res){
         })
 
         if(!product){                                    // if no such product exists , cannot proceed     
-            res.status(400).json({
+            res.status(404).json({
                 message : "Product not found."
             }) ; 
             return ; 
@@ -49,7 +49,7 @@ export async function getProductsById(req,res){
                 res.json(product); 
             }
             else{
-                res.status(400).json({
+                res.status(404).json({
                     message : "Product is not currently available"
                 })
             }
